@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://qbathany:oQIsdlLzU1YsiTG8@cluster0.i1fenpo.mongo
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 
-
+app.use(express.json()); 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 app.use ('/api/books', books)
 app.use ('/api/auth', authentication)
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(express.json()); 
+
 
   
 module.exports = app;
