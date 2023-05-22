@@ -106,6 +106,7 @@ export async function rateBook(id, userId, rating) {
     const book = response.data;
     // eslint-disable-next-line no-underscore-dangle
     book.id = book._id;
+    console.log(book);
     return book;
   } catch (e) {
     console.error(e);

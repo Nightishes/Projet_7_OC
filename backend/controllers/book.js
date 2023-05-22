@@ -2,6 +2,7 @@ const { error} = require('console');
 const Book = require('../models/book');
 const fs = require('fs');
 
+
 exports.getAllBooks = (req, res) =>{
     Book.find()
     .then(books => res.status(200).json(books))
@@ -20,7 +21,7 @@ exports.createBook = (req, res, next) =>{
       author : bookObject.author,
       year: bookObject.year,
       genre: bookObject.genre,
-      ratings: bookObject.ratings
+      ratings: bookObject.ratings,
     });
     book.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
@@ -78,26 +79,25 @@ exports.deleteOneBook = (req, res, next) =>{
   }
 
 
-exports.updateRatings = (req, res, next) =>{
-  const bookObject = {...req.body};
-  console.log(req.params.id.toString());
-  console.log(bookObject)
+exports.updateRatings = (req, res) =>{
   Book.findOne({ _id: req.params.id})
     .then(book=>{
-      const newRating = new book.ratings({
-        userId : req.body._userId,
-        grade : req.body.rating,
-        id : book.ratings.length +1
-      })
-      book.newRating.save()
-      console.log(newRating)
-      // Book.updateMany({ _id: req.params.id},
-      //   { $push: {"book.ratings" : newRating}
-
-      //   })
-      //   console.log(book.ratings)
+      book.ratings.push({userId: req.auth.userId, grade: req.body.rating})  
+      let totalRating = 0
+      for (i=0; i<book.ratings.length; i++){
+        currentRating = book.ratings[i].grade
+        totalRating = totalRating + currentRating
+      }
+      book.averageRating = totalRating / book.ratings.length;
+    
+      book.save()
+      return book
+      
     })
-    .then(() => res.status(200).json({message : 'Notation modifiée!'}))
+    .then((book) => {
+      res.status(201).json({book});
+      console.log(book)
+    })
     .catch(error => res.status(500).json({error}))
   }
 
