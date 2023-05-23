@@ -22,6 +22,7 @@ exports.createBook = (req, res, next) =>{
       year: bookObject.year,
       genre: bookObject.genre,
       ratings: bookObject.ratings,
+      averageRating : 0
     });
     book.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
@@ -95,7 +96,7 @@ exports.updateRatings = (req, res) =>{
       
     })
     .then((book) => {
-      res.status(201).json({book});
+      res.status(201).json({book,_id: book._id});
       console.log(book)
     })
     .catch(error => res.status(500).json({error}))
