@@ -84,20 +84,18 @@ exports.updateRatings = (req, res) =>{
   Book.findOne({ _id: req.params.id})
     .then(book=>{
       book.ratings.push({userId: req.auth.userId, grade: req.body.rating})  
-      let totalRating = 0
-      for (i=0; i<book.ratings.length; i++){
-        currentRating = book.ratings[i].grade
-        totalRating = totalRating + currentRating
+      let totalRating = 0;
+      for (let i = 0; i < book.ratings.length; i++){
+       let currentRating = book.ratings[i].grade;
+       totalRating += currentRating;
       }
       book.averageRating = totalRating / book.ratings.length;
-    
-      book.save()
-      return book
-      
+      // book.save()
+      return book.save()
     })
-    .then((book) => {
-      res.status(201).json({book,_id: book._id});
+    .then(book => {
       console.log(book)
+      res.status(201).json(book);
     })
     .catch(error => res.status(500).json({error}))
   }
