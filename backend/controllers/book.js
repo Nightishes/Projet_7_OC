@@ -1,4 +1,4 @@
-const { error} = require('console');
+const {error} = require('console');
 const Book = require('../models/book');
 const fs = require('fs');
 
@@ -24,6 +24,7 @@ exports.createBook = (req, res, next) =>{
       ratings: bookObject.ratings,
       averageRating : bookObject.ratings[0].grade
     });
+    
     book.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
     .catch(error => res.status(400).json({ error }));
@@ -42,6 +43,7 @@ exports.updateOneBook = (req, res, next) =>{
   } :
   {   ...req.body
   };
+  
 delete bookObject._userId;
 Book.findOne({_id: req.params.id})
     .then((book) => {
@@ -90,7 +92,7 @@ exports.updateRatings = (req, res) =>{
        totalRating += currentRating;
       }
       book.averageRating = totalRating / book.ratings.length;
-      // book.save()
+      
       return book.save()
     })
     .then(book => {
